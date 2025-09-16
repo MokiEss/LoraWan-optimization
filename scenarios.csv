@@ -1,0 +1,2 @@
+nDevices;nGateways;radius;simulationTime;appPeriod;payloadSize;enableAdr
+100;1;7500;3600;60;10;0
