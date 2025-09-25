@@ -50,20 +50,22 @@ def objective_function(scenario, sf_solution):
      #   print("ns3 executable already built, skipping build.")
 
     # 5. Run simulation
+
     nDevices = scenario["nDevices"]
     nGateways = scenario["nGateways"]
     radius = scenario["radius"]
     simulationTime = scenario["simulationTime"]
     appPeriod = scenario["appPeriod"]
     payloadSize = scenario["payloadSize"]
-    enableAdr = scenario["enableAdr"]
 
 
 
     sfs_arg = ""
+
     sf_solution = list(sf_solution)
+
     if sf_solution and len(sf_solution) == nDevices:
-        sfs_str = " ".join(str(int(x)) for x in sf_solution)
+        sfs_str = ",".join(str(int(x)) for x in sf_solution)
         sfs_arg = f"--sfs={sfs_str}"
     elif sf_solution:
         raise ValueError(f"Length of sf_solution ({len(sf_solution)}) does not match nDevices ({nDevices})")
@@ -78,8 +80,7 @@ def objective_function(scenario, sf_solution):
         f"--simulationTime={simulationTime} "
         f"--appPeriod={appPeriod} "
         f"--payloadSize={payloadSize} "
-        f"{sfs_arg} "
-        f"--enableAdr={enableAdr}"
+        f"{sfs_arg}"
     )
 
     output = run_cmd([ns3_exe, "run", cmd_str], cwd=NS3_BUILD)

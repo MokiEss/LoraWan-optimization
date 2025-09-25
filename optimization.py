@@ -1,34 +1,42 @@
 scenarioN = 0
-from mealpy import IntegerVar, GA, SA
-from run_simulation import objective_function
-import numpy as np
+scenario = None
+
+
 import pandas as pd
+import os
+from metaheuristics import choose_metaheuristic
+# Read scenarios
+df = pd.read_csv("scenarios.csv", sep=",")
 
 
-df = pd.read_csv("scenarios.csv", sep=";")
-nDevices = df.iloc[scenarioN]["nDevices"]
-scenario = df.iloc[scenarioN]
 
-def objective_func(solution):
-    global scenarioN
-    global scenario
-    mapped_values = np.interp(solution, [0, 1], [7, 12]).astype(int)
-    fitness = objective_function(scenario, mapped_values)
-    print("mapped_values:", mapped_values)
-    return fitness
+# Results folder
+results_folder = "results"
+os.makedirs(results_folder, exist_ok=True)
+csv_file = os.path.join(results_folder, "results_summary.csv")
+mean_curve_file = os.path.join(results_folder, "all_mean_convergence_curves.txt")
+
+# Prepare list to store summary results
+all_results = []
+
+with open(mean_curve_file, "w") as curve_f:
+    for index, row in df.iterrows():
+        algorithm = row["algorithm"]
+        nDevices = row["nDevices"]
+        nGateways = row["nGateways"]
+        radius = row["radius"]
+        simulationTime = row["simulationTime"]
+        appPeriod = row["appPeriod"]
+        payloadSize = row["payloadSize"]
+        scenario = row
+        print("scenario running : ", scenario["algorithm"], scenario["nDevices"], scenario["nGateways"],scenario["appPeriod"], scenario["payloadSize"])
+        all_results = choose_metaheuristic(index,scenario,all_results,curve_f)
+        print("scenario finished : ", scenario["algorithm"], scenario["nDevices"], scenario["nGateways"],
+              scenario["appPeriod"], scenario["payloadSize"])
 
 
-problem_dict = {
-    "obj_func": objective_func,
-    "bounds": IntegerVar(lb=[0, ] * nDevices, ub=[1, ] * nDevices,),
-    "minmax": "max",
-}
-
-NUMBER_OF_WORKERS = 8
-model = SA.GaussianSA(epoch=10, pop_size=2, temp_init = 100, cooling_rate = 0.99, scale = 0.1, n_workers = NUMBER_OF_WORKERS)
-
-g_best = model.solve(problem_dict)
-
-print(f"Solution: {np.interp(g_best.solution, [0, 1], [7, 12]).astype(int)}, Fitness: {g_best.target.fitness}")
-
-print(f"Solution: {np.interp(model.g_best.solution, [0, 1], [7, 12]).astype(int)}, Fitness: {model.g_best.target.fitness}")
+# Save all summary results to CSV
+results_df = pd.DataFrame(all_results)
+results_df.to_csv(csv_file, index=False)
+print(f"All scenario summaries saved in {csv_file}")
+print(f"All mean convergence curves saved in {mean_curve_file}")
