@@ -2,12 +2,16 @@
 import pandas as pd
 from mealpy import IntegerVar, GA, DE, CSA, PSO, SHADE
 from run_simulation import objective_function
+
 import numpy as np
 import time
 number_runs = 5
 NUMBER_OF_WORKERS = 8
 
-def choose_metaheuristic(index_scenario, scenario, all_results, curve_f):
+
+
+def choose_metaheuristic(index_scenario, scenario,  curve_f):
+    all_results = []
     def objective_func(solution):
         return objective_function(scenario, solution)
 
@@ -16,17 +20,74 @@ def choose_metaheuristic(index_scenario, scenario, all_results, curve_f):
         "obj_func": objective_func,
         "bounds": IntegerVar(lb=(7,) * nDevices, ub=(12,) * nDevices),
         "minmax": "max",
+        "log_to": None,
     }
 
 
 
     # Mapping algorithm name -> (class, kwargs)
     algo_mapping = {
-        "GA": (GA.BaseGA, {"epoch": 100, "pop_size": 50, "pc": 0.9, "pm": 0.05, "n_workers": NUMBER_OF_WORKERS}),
-        "DE": (DE.OriginalDE, {"epoch": 100, "pop_size": 50, "wf": 0.7, "cr": 0.9, "strategy": 0, "n_workers": NUMBER_OF_WORKERS}),
-        "CS": (CSA.OriginalCSA, {"epoch": 100, "pop_size": 50, "p_a": 0.3, "n_workers": NUMBER_OF_WORKERS}),
-        "PSO": (PSO.OriginalPSO, {"epoch": 100, "pop_size": 50, "c1": 2.05, "c2": 20.5, "w": 0.4, "n_workers": NUMBER_OF_WORKERS}),
-        "SHADE": (SHADE.L_SHADE, {"epoch": 100, "pop_size": 50, "miu_f": 0.5, "miu_cr": 0.5, "n_workers": NUMBER_OF_WORKERS}),
+        "GA": (
+            GA.BaseGA,
+            {
+                "epoch": 100,
+                "pop_size": 50,
+                "pc": 0.9,
+                "pm": 0.05,
+                "n_workers": NUMBER_OF_WORKERS,
+                "verbose": False,
+                "early_stop": 0.99,
+            },
+        ),
+        "DE": (
+            DE.OriginalDE,
+            {
+                "epoch": 100,
+                "pop_size": 50,
+                "wf": 0.7,
+                "cr": 0.9,
+                "strategy": 0,
+                "n_workers": NUMBER_OF_WORKERS,
+                "verbose": False,
+                "early_stop": 0.99,
+            },
+        ),
+        "CS": (
+            CSA.OriginalCSA,
+            {
+                "epoch": 100,
+                "pop_size": 50,
+                "p_a": 0.3,
+                "n_workers": NUMBER_OF_WORKERS,
+                "verbose": False,
+                "early_stop": 0.99,
+            },
+        ),
+        "PSO": (
+            PSO.OriginalPSO,
+            {
+                "epoch": 100,
+                "pop_size": 50,
+                "c1": 2.05,
+                "c2": 2.05,
+                "w": 0.4,
+                "n_workers": NUMBER_OF_WORKERS,
+                "verbose": False,
+                "early_stop": 0.99,
+            },
+        ),
+        "SHADE": (
+            SHADE.L_SHADE,
+            {
+                "epoch": 100,
+                "pop_size": 50,
+                "miu_f": 0.5,
+                "miu_cr": 0.5,
+                "n_workers": NUMBER_OF_WORKERS,
+                "verbose": False,
+                "early_stop": 0.99,
+            },
+        ),
     }
 
     if scenario["algorithm"] not in algo_mapping:
@@ -79,8 +140,17 @@ def choose_metaheuristic(index_scenario, scenario, all_results, curve_f):
 
     # Save mean convergence curve to the common txt file
     curve_f.write(f"# Scenario {index_scenario}\n")
-    curve_f.write("Mean: " + ",".join(map(str, mean_curve)) + "\n")
-    curve_f.write("Std: " + ",".join(map(str, std_curve)) + "\n\n")
+    curve_f.write("Mean curve: " + ",".join(map(str, mean_curve)) + "\n")
+    curve_f.write("Std curve: " + ",".join(map(str, std_curve)) + "\n\n")
+    curve_f.write("mean_time: "+ ", "+ str(mean_time) + "\n")
+    curve_f.write("best_solution: " + ", "+ str(best_solution)+ "\n")
+    curve_f.write("worst_solution: " + ", "+ str(worst_solution) + "\n")
+    curve_f.write("mean_solution: " + ", "+ str(mean_solution) + "\n")
+    curve_f.write("std_solution: " + ", "+ str(std_solution) + "\n\n\n\n")
+    curve_f.write("solutions runs are : " + "\n\n\n\n")
+    for i in range(number_runs):
+        curve_f.write(str(all_solutions[i]))
+        curve_f.write("\n\n")
 
     return all_results
 
