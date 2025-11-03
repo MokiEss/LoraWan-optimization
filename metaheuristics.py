@@ -116,9 +116,9 @@ def choose_metaheuristic(index_scenario, scenario,  curve_f):
     mean_curve = np.mean(all_curves, axis=0)
     std_curve = np.std(all_curves, axis=0)
     mean_time = np.mean(all_times)
-    best_solution = np.min(all_solutions)
+    worst_solution = np.min(all_solutions)
     mean_solution = np.mean(all_solutions)
-    worst_solution = np.max(all_solutions)
+    best_solution = np.max(all_solutions)
     std_solution = np.std(all_solutions)
 
     # Save summary results

@@ -5,8 +5,9 @@ scenario = None
 import pandas as pd
 import os
 from metaheuristics import choose_metaheuristic
+import ADR_results as adr_res
 # Read scenarios
-df = pd.read_csv("scenarios.csv", sep=",")
+df = pd.read_csv("scenarios.csv", sep="," , header=0)
 import concurrent.futures
 
 
@@ -40,6 +41,10 @@ with concurrent.futures.ProcessPoolExecutor() as executor:
 
 # Save all summary results to CSV
 results_df = pd.DataFrame(all_results)
+results_df.columns = ["scenario"]
 results_df.to_csv(csv_file, index=False)
 print(f"All scenario summaries saved in {csv_file}")
 print(f"All mean convergence curves saved in results")
+
+# get the results of all scenarios using ADR mechanism to compare with metaheuristics
+adr_res.run_adr_results()
