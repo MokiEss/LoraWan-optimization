@@ -68,5 +68,7 @@ combined_df = combined_df.sort_values(by=["algorithm", "nDevices"]).reset_index(
 
 # Save to CSV
 combined_df.to_csv("global_results.csv", index=False)
+mean_of_combined_df = combined_df.groupby(["algorithm"])["mean_value"].mean()
 
+print(mean_of_combined_df)
 
