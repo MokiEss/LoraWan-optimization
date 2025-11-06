@@ -30,7 +30,7 @@ def run_scenario_and_runs(scenario, scenario_idx):
     # Store in results: [Run1, Run2, Run3, Run4, Run5, Best, Worst, Mean, Std]
     all_results[scenario_idx, :9] = results_per_scenario + [best, worst, mean, std]
     all_times[scenario_idx, 0] = avg_time
-
+    print("scenario: ", scenario_idx, "finished")
 
 # Run everything in parallel
 all_outputs = Parallel(n_jobs=-1)(
