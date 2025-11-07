@@ -33,7 +33,7 @@ class SurrogateObjective:
         if len(self.X_train) > 10:
             self.model.fit(np.array(self.X_train), np.array(self.y_train))
             self.is_trained = True
-            print(f"  [Surrogate trained on {len(self.X_train)} samples]")
+            #print(f"  [Surrogate trained on {len(self.X_train)} samples]")
 
     def predict(self, X):
         """Predict fitness using surrogate model"""
