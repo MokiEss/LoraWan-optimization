@@ -47,7 +47,7 @@ if(df.iloc[0]["worst_solution"]>df.iloc[0]["best_solution"]):
     df["worst_solution"],df["best_solution"] = df["best_solution"],df["worst_solution"]
 
 df.to_csv(output_file, index=False)
-mean_of_means = df.groupby(["algorithm", "nDevices"], observed=True)["mean_solution"].mean()
+mean_of_means = df.groupby(["algorithm", "nDevices"], observed=True)[["mean_solution", "mean_time"]].mean()
 adr_df = pd.read_csv("adr_results.csv")
 
 mean_of_adr_per_nDevices = adr_df.groupby(["algorithm","nDevices"])["pdr"].mean()

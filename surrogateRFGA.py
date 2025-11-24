@@ -2,6 +2,7 @@ from mealpy import IntegerVar, GA
 from run_simulation import objective_function
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
+
 from mealpy.utils.target import Target
 NUMBER_OF_WORKERS = 8
 import concurrent.futures as parallel
