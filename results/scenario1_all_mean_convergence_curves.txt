@@ -10,7 +10,7 @@ std_solution: , 0.0033315700289179386
 
 
 
-solutions runs are : 
+solutions runs are :
 
 
 

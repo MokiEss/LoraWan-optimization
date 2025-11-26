@@ -50,7 +50,7 @@ for scenario_idx, results, avg_time in all_outputs:
 columns = ['Run1', 'Run2', 'Run3', 'Run4', 'Run5', 'Best', 'Worst', 'Mean', 'Std', 'Time']
 combined = np.hstack([all_results, all_times])
 df_output = pd.DataFrame(combined, columns=columns)
-df_output.to_csv('surrogate_global_results.csv', index=False)
+df_output.to_csv('xgboost_global_results.csv', index=False)
 
 
 print("---------------------------------------")
